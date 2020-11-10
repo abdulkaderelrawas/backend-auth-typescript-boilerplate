@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 
 export class GenerateToken {
-  private static readonly JWT_SECRET = process.env.JWT_SECRET;
   private userID: string;
 
   constructor(userID: string) {

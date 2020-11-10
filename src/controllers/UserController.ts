@@ -19,7 +19,7 @@ export class UserController {
   public async getUsers(): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        const users = await User.find({});
+        const users = await User.find({}).select('-password');
         resolve(users);
       } catch (error) {
         reject(error);
@@ -52,9 +52,9 @@ export class UserController {
    */
   public async registerUser<
     T extends {
-      name: String;
-      email: String;
-      password: String;
+      name: string;
+      email: string;
+      password: string;
     }
   >(data: T): Promise<any> {
     return new Promise(async (resolve, reject) => {
@@ -71,6 +71,7 @@ export class UserController {
           name,
           email,
           password,
+          isAdmin: false,
         });
 
         if (user) {
