@@ -69,5 +69,18 @@ export class UserRoutes {
           res.send({ result: false, code: 400, message: error });
         });
     });
+
+    this.userRouter.route('/login').post((req: Request, res: Response) => {
+      this.userController
+        .login(req.body)
+        .then((result) => {
+          res.status(200);
+          res.send({ result: true, code: 200, data: result });
+        })
+        .catch((error) => {
+          res.status(401);
+          res.send({ result: false, code: 401, message: error });
+        });
+    });
   }
 }

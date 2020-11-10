@@ -93,4 +93,38 @@ export class UserController {
       }
     });
   }
+
+  /**
+   * @description   Login & get Token
+   * @route         POST /api/v1/users
+   * @access        Public
+   */
+  public async login<
+    T extends {
+      email: string;
+      password: string;
+    }
+  >(data: T): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { email, password } = data;
+        const user = await User.findOne({ email });
+
+        if (user && (await user.matchPassword(password))) {
+          const jwt = new GenerateToken(user._id);
+          resolve({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            token: await jwt.generateToken(),
+          });
+        } else {
+          reject('Invalid email or password.');
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
 }
