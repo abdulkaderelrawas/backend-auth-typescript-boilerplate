@@ -57,6 +57,11 @@ export class UserRoutes {
     // 888             Y88b. .d88P      888   d88P      888             888        Y88b  d88P
     // 888              "Y88888P"       8888888P"       88888888      8888888       "Y8888P"
 
+    /**
+     * @description   Resgister a new user
+     * @route         POST /api/v1/users
+     * @access        Public
+     */
     this.userRouter.route('/').post((req: Request, res: Response) => {
       this.userController
         .registerUser(req.body)
@@ -70,6 +75,11 @@ export class UserRoutes {
         });
     });
 
+    /**
+     * @description   Login & get Token
+     * @route         POST /api/v1/users
+     * @access        Public
+     */
     this.userRouter.route('/login').post((req: Request, res: Response) => {
       this.userController
         .login(req.body)
