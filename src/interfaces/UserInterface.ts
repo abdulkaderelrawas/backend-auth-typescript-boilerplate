@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export default interface IUser extends mongoose.Document {
+export default interface UserInterface extends mongoose.Document {
   matchPassword(password: string): Promise<boolean>;
   name: string;
   email: string;
