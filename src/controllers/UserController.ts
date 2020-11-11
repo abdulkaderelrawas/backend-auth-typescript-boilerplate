@@ -71,7 +71,6 @@ export class UserController {
           name,
           email,
           password,
-          isAdmin: false,
         });
 
         if (user) {

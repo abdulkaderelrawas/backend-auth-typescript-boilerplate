@@ -4,5 +4,5 @@ export default interface UserInterface extends mongoose.Document {
   name: string;
   email: string;
   password: string;
-  isAdmin: boolean;
+  isAdmin?: boolean;
 }
