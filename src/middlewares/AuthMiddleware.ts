@@ -4,7 +4,7 @@ import User from '../models/UserModel';
 import asyncHandler from 'express-async-handler';
 
 export const protect = asyncHandler(
-  async (request: Request, response: Response, next: NextFunction) => {
+  async (request: any, response: Response, next: NextFunction) => {
     let token: string;
 
     console.log(request.headers.authorization);
@@ -17,7 +17,7 @@ export const protect = asyncHandler(
         token = request.headers.authorization.split(' ')[1];
         const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
         const { userID } = decoded;
-        request.body.user = await User.findById(userID).select('-password');
+        request.user = await User.findById(userID).select('-password');
 
         next();
       } catch (error) {
@@ -31,3 +31,14 @@ export const protect = asyncHandler(
     }
   }
 );
+
+export const admin = (request: any, response: Response, next: NextFunction) => {
+  console.log(request.user);
+  console.log(request.body);
+  if (request.user && request.user.isAdmin) {
+    next();
+  } else {
+    response.status(401);
+    throw new Error('Not authorized as Admin');
+  }
+};

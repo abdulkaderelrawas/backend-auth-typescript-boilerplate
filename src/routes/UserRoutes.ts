@@ -1,6 +1,6 @@
 import { Application, Router, Request, Response } from 'express';
 import { UserController } from '../controllers/UserController';
-import { protect } from '../middlewares/AuthMiddleware';
+import { protect, admin } from '../middlewares/AuthMiddleware';
 export class UserRoutes {
   private app: Application;
   private userRouter: Router;
@@ -28,7 +28,7 @@ export class UserRoutes {
     //  d8888888888      888  .d88P      888   "   888        888        888   Y8888
     // d88P     888      8888888P"       888       888      8888888      888    Y888
 
-    this.userRouter.route('/').get(protect, (req: Request, res: Response) => {
+    this.userRouter.route('/').get((req: any, res: Response) => {
       this.userController
         .getUsers()
         .then((result) => {
