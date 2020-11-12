@@ -56,10 +56,9 @@ In order to install and activate the boilerplate, follow the instructions below 
 ## Available Scripts
 
 ```md
-"scripts": {
-"start": "node dist/app.js", //start app.js (after build)
-"dev": "nodemon ./app.ts", //watch server (developer mode)
-"build": "tsc && cp --copy-contents .env dist/.env" //build project to get 'dist/' directory
-},
-},
+   "scripts": {
+   "start": "node dist/app.js", //start app.js (after build)
+   "dev": "nodemon ./app.ts", //watch server (developer mode)
+   "build": "tsc && cp --copy-contents .env dist/.env" //build project to get 'dist/' directory
+   },
 ```
