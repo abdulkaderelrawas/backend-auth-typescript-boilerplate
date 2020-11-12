@@ -27,6 +27,78 @@ export class UserController {
     });
   }
 
+  /**
+   * @description   Delete a user
+   * @route         DELETE /api/v1/users/:id
+   * @access        Protect, Admin
+   */
+  public async deleteUser(user_id: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await User.findById(user_id);
+        if (user) {
+          await user.remove();
+          resolve({ message: 'User deleted successfully' });
+        } else {
+          reject({ message: 'User Not Found' });
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  /**
+   * @description   Get user profile
+   * @route         GET /api/v1/users/profile
+   * @access        Protect
+   */
+  public async getUserById(user_id: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await User.findById(user_id).select('-password');
+        if (user) {
+          resolve(user);
+        } else {
+          reject({ message: 'User Not Found' });
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  /**
+   * @description   Update user
+   * @route         PUT /api/v1/users/:id
+   * @access        Protect, Admin
+   */
+  public async updateUser(req: any): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await User.findById(req.params.id);
+        if (user) {
+          user.name = req.body.name || user.name;
+          user.email = req.body.email || user.email;
+          user.isAdmin = req.body.isAdmin;
+
+          const updatedUser = await user.save();
+
+          resolve({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin,
+          });
+        } else {
+          reject({ message: 'User Not Found' });
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
   //   8888888b.       8888888b.        .d88888b.       88888888888      8888888888       .d8888b.       88888888888
   // 888   Y88b      888   Y88b      d88P" "Y88b          888          888             d88P  Y88b          888
   // 888    888      888    888      888     888          888          888             888    888          888
@@ -35,6 +107,66 @@ export class UserController {
   // 888             888 T88b        888     888          888          888             888    888          888
   // 888             888  T88b       Y88b. .d88P          888          888             Y88b  d88P          888
   // 888             888   T88b       "Y88888P"           888          8888888888       "Y8888P"           888
+
+  /**
+   * @description   Get user profile
+   * @route         GET /api/v1/users/profile
+   * @access        Protect
+   */
+  public async getUserProfile(user_id: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await User.findById(user_id);
+        if (user) {
+          resolve({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+          });
+        } else {
+          reject({ message: 'User Not Found' });
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  /**
+   * @description   Update user profile
+   * @route         PUT /api/v1/users/profile
+   * @access        Protect
+   */
+  public async updateUserProfile(req: any): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await User.findById(req.user._id);
+        if (user) {
+          user.name = req.body.name || user.name;
+          user.email = req.body.email || user.email;
+          if (req.body.password) {
+            user.password = req.body.password;
+          }
+
+          const updatedUser = await user.save();
+          const jwt = new GenerateToken(updatedUser._id);
+
+          resolve({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin,
+            token: await jwt.generateToken(),
+          });
+        } else {
+          reject({ message: 'User Not Found' });
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
 
   //   8888888b.       888     888      888888b.        888           8888888       .d8888b.
   // 888   Y88b      888     888      888  "88b       888             888        d88P  Y88b

@@ -7,8 +7,6 @@ export const protect = asyncHandler(
   async (request: any, response: Response, next: NextFunction) => {
     let token: string;
 
-    console.log(request.headers.authorization);
-
     if (
       request.headers.authorization &&
       request.headers.authorization.startsWith('Bearer')
@@ -33,8 +31,6 @@ export const protect = asyncHandler(
 );
 
 export const admin = (request: any, response: Response, next: NextFunction) => {
-  console.log(request.user);
-  console.log(request.body);
   if (request.user && request.user.isAdmin) {
     next();
   } else {
